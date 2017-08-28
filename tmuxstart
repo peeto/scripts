@@ -1,0 +1,37 @@
+#!/bin/bash
+echo
+# first window is called console, top 60% is bash
+tmux new-session -d -n console -s default
+# remap prefix to Control + a
+tmux set -g prefix C-a
+tmux unbind C-b
+tmux bind C-a send-prefix
+# windows start at '1'
+set -g base-index 1
+# allow resize
+tmux setw -g aggressive-resize on
+# allow mouse mode
+tmux set -g mode-mouse on
+tmux set -g mouse-resize-pane on
+tmux set -g mouse-select-pane on
+tmux set -g mouse-select-window on
+# lower left 50% x 40% is logs
+tmux split-window -p 40 'bash -c "tail -Fn20 /var/log/syslog /var/log/auth.log /var/log/fail2ban.log"'
+
+# lower right 50% x 40% is htop
+tmux split-window -h htop
+# window for work (bash)
+tmux new-window -c ~/Documents/Projects/ -n work
+# window for root
+tmux new-window -n root 'sudo su -'
+# window for htop
+tmux new-window -n htop 'htop'
+# window for logs 
+tmux new-window -n logs 'bash -c "tail -Fn20 /var/log/syslog /var/log/auth.log /var/log/fail2ban.log"'
+# window for network monitoring 
+tmux new-window -n network 'sudo tcptrack -i eth0 -r 10'
+# focus on desired window
+tmux selectw -t 0
+tmux selectp -t 0
+# wish I could remember what this does
+tmux a -t default
