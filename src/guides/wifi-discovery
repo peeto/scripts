@@ -1,5 +1,8 @@
 #instructions for wifi discovery
 
+#ubuntu install
+apt install aircrack-ng
+
 #find wifi nics
 iwlist
 
